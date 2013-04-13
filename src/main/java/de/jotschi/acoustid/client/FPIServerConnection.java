@@ -4,9 +4,13 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
+import java.net.ConnectException;
 import java.net.Socket;
 import java.net.UnknownHostException;
-import java.util.HashMap;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
@@ -97,7 +101,9 @@ public class FPIServerConnection {
 			t.setKeepAlive(true);
 			out = new PrintStream(t.getOutputStream(), true);
 			in = new BufferedReader(new InputStreamReader(t.getInputStream()));
-
+		} catch (ConnectException e) {
+			log.error("Error while connecting to host {" + this.hostname + "} with port {" + this.port + "}", e);
+			return false;
 		} catch (UnknownHostException e) {
 			log.error("Unknown Host Exception. Please ensure host settings", e);
 			return false;
@@ -128,7 +134,7 @@ public class FPIServerConnection {
 	 * @return
 	 * @throws IOException
 	 */
-	public String insertFingerprint(int i, Fingerprint fingerprint) throws IOException {
+	public String insertFingerprint(long i, Fingerprint fingerprint) throws IOException {
 		return this.sendCommand(Command.INSERT + " " + i + " " + fingerprint);
 	}
 
@@ -139,12 +145,12 @@ public class FPIServerConnection {
 	 * @return
 	 * @throws IOException
 	 */
-	public Map<Integer, Integer> search(Fingerprint fingerprint) throws IOException {
+	public Map<Long, Long> search(Fingerprint fingerprint) throws IOException {
 		String response = this.sendCommand(Command.SEARCH + " " + fingerprint);
 		if (StringUtils.isEmpty(response) || !response.startsWith("OK")) {
 			throw new IOException("The search request failed with response {" + response + "}");
 		}
-		Map<Integer, Integer> list = new HashMap<Integer, Integer>();
+		Map<Long, Long> list = new LinkedHashMap<Long, Long>();
 		String[] parts = response.split(" ");
 		boolean skipFirst = true;
 		for (String str : parts) {
@@ -153,9 +159,18 @@ public class FPIServerConnection {
 				continue;
 			}
 			String[] entry = str.split(":");
-			list.put(Integer.parseInt(entry[0]), Integer.parseInt(entry[1]));
+			list.put(Long.parseLong(entry[0]), Long.parseLong(entry[1]));
 		}
 
 		return list;
+	}
+
+	/**
+	 * Checks whether the client is connected to the server
+	 * 
+	 * @return
+	 */
+	public boolean isConnected() {
+		return this.t.isConnected();
 	}
 }
