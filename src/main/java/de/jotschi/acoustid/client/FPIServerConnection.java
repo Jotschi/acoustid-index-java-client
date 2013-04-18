@@ -7,10 +7,7 @@ import java.io.PrintStream;
 import java.net.ConnectException;
 import java.net.Socket;
 import java.net.UnknownHostException;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
@@ -172,5 +169,19 @@ public class FPIServerConnection {
 	 */
 	public boolean isConnected() {
 		return this.t.isConnected();
+	}
+
+	/**
+	 * @param port sets the port
+	 */
+	public void setPort(int port) {
+		this.port = port;
+	}
+
+	/**
+	 * @param hostname set the hostname
+	 */
+	public void setHostname(String hostname) {
+		this.hostname = hostname;
 	}
 }

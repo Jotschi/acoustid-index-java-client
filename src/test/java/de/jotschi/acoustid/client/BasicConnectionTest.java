@@ -15,7 +15,7 @@ public class BasicConnectionTest {
 	@Test
 	public void testBasicConnection() throws IOException {
 
-		FPIServerConnection conn = new FPIServerConnection("experimental.sky", 6080);
+		FPIServerConnection conn = new FPIServerConnection("192.168.0.2", 30124);
 		conn.connect();
 
 		String response = "";
@@ -25,9 +25,9 @@ public class BasicConnectionTest {
 		response = conn.insertFingerprint(3, new Fingerprint("1130316157,1096749341,1075786015,1075655999,1075656047,1079977343"));
 		response = conn.sendCommand(Command.COMMIT);
 		log.debug(response);
-		Map<Integer, Integer> result = conn.search(new Fingerprint("1130316157,397509509,393249669,389054869"));
+		Map<Long, Long> result = conn.search(new Fingerprint("1130316157,397509509,393249669,389054869"));
 		assertTrue(result.get(1) == 3);
-		System.out.println(result);
+		log.debug(result);
 
 		log.debug(response);
 		response = conn.sendCommand(Command.QUIT);
