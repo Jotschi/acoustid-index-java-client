@@ -30,8 +30,8 @@ public class FPIServerConnection {
 
 	/** The hostname of the fingerprint server */
 	private String hostname = "localhost";
-	
-	/** The timeout to the connection to the fingerprint server*/
+
+	/** The timeout to the connection to the fingerprint server */
 	private int timeout = 1000;
 
 	/** The Socket t, it will be used to open the connection */
@@ -47,7 +47,7 @@ public class FPIServerConnection {
 	public FPIServerConnection() {
 		log.debug("Initializing new server connection");
 	}
-	
+
 	/**
 	 * Creates a fpi server connection with the given parameters.
 	 * 
@@ -62,8 +62,6 @@ public class FPIServerConnection {
 		this.hostname = hostname;
 		this.port = port;
 	}
-	
-	
 
 	/**
 	 * Creates a fpi server connection with the given parameters.
@@ -74,7 +72,8 @@ public class FPIServerConnection {
 	 *            the port
 	 */
 	public FPIServerConnection(String hostname, int port, int timeout) {
-		log.debug("Initializing new server connection with this config: " + this.hostname + " with port " + this.port + " and timeout");
+		log.debug("Initializing new server connection with this config: " + this.hostname + " with port " + this.port
+				+ " and timeout");
 
 		this.hostname = hostname;
 		this.port = port;
@@ -108,7 +107,8 @@ public class FPIServerConnection {
 	 * Connect.
 	 * 
 	 * <p>
-	 * opens a new socket connection to the configured hostname and the configured port
+	 * opens a new socket connection to the configured hostname and the
+	 * configured port
 	 * 
 	 * @return true, if successful
 	 */
@@ -116,7 +116,7 @@ public class FPIServerConnection {
 		log.debug("opening socket connection to " + this.hostname + " with port " + this.port);
 
 		try {
-			
+
 			SocketAddress sockaddr = new InetSocketAddress(hostname, port);
 			Socket t = new Socket();
 			t.connect(sockaddr, timeout);
@@ -198,14 +198,16 @@ public class FPIServerConnection {
 	}
 
 	/**
-	 * @param port sets the port
+	 * @param port
+	 *            sets the port
 	 */
 	public void setPort(int port) {
 		this.port = port;
 	}
 
 	/**
-	 * @param hostname set the hostname
+	 * @param hostname
+	 *            set the hostname
 	 */
 	public void setHostname(String hostname) {
 		this.hostname = hostname;
