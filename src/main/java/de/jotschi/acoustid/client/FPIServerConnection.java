@@ -5,7 +5,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.net.ConnectException;
+import java.net.InetSocketAddress;
 import java.net.Socket;
+import java.net.SocketAddress;
 import java.net.UnknownHostException;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -28,6 +30,9 @@ public class FPIServerConnection {
 
 	/** The hostname of the fingerprint server */
 	private String hostname = "localhost";
+	
+	/** The timeout to the connection to the fingerprint server*/
+	private int timeout = 1000;
 
 	/** The Socket t, it will be used to open the connection */
 	private Socket t;
@@ -42,7 +47,7 @@ public class FPIServerConnection {
 	public FPIServerConnection() {
 		log.debug("Initializing new server connection");
 	}
-
+	
 	/**
 	 * Creates a fpi server connection with the given parameters.
 	 * 
@@ -56,6 +61,24 @@ public class FPIServerConnection {
 
 		this.hostname = hostname;
 		this.port = port;
+	}
+	
+	
+
+	/**
+	 * Creates a fpi server connection with the given parameters.
+	 * 
+	 * @param hostname
+	 *            the hostname
+	 * @param port
+	 *            the port
+	 */
+	public FPIServerConnection(String hostname, int port, int timeout) {
+		log.debug("Initializing new server connection with this config: " + this.hostname + " with port " + this.port + " and timeout");
+
+		this.hostname = hostname;
+		this.port = port;
+		this.timeout = timeout;
 	}
 
 	public String sendCommand(Command command) throws IOException {
@@ -93,8 +116,11 @@ public class FPIServerConnection {
 		log.debug("opening socket connection to " + this.hostname + " with port " + this.port);
 
 		try {
+			
+			SocketAddress sockaddr = new InetSocketAddress(hostname, port);
+			Socket t = new Socket();
+			t.connect(sockaddr, timeout);
 
-			t = new Socket(this.hostname, this.port);
 			t.setKeepAlive(true);
 			out = new PrintStream(t.getOutputStream(), true);
 			in = new BufferedReader(new InputStreamReader(t.getInputStream()));

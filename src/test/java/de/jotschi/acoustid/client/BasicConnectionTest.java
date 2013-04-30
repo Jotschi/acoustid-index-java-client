@@ -15,7 +15,7 @@ public class BasicConnectionTest {
 	@Test
 	public void testBasicConnection() throws IOException {
 
-		FPIServerConnection conn = new FPIServerConnection("192.168.0.2", 30124);
+		FPIServerConnection conn = new FPIServerConnection("YOURHOST", 6080);
 		conn.connect();
 
 		String response = "";
